@@ -1,0 +1,129 @@
+
+data ControlCommand = EvalStart
+                    | EvalOutput
+                    | EvalEnd
+                    | Duplicate
+                    | PopEvaluatedValue
+                    | PopFunction
+                    | PopTunnel
+                    | BeginString
+                    | EndString
+                    | NoOp
+                    | ChoiceCount
+                    | Turns
+                    | TurnsSince
+                    | ReadCount
+                    | Random
+                    | SeedRandom
+                    | VisitIndex
+                    | SequenceShuffleIndex
+                    | StartThread
+                    | Done
+                    | End
+                    | ListFromInt
+                    | ListRange
+                    | ListRandom
+  deriving (Generic, Show)
+
+instance FromJSON ControlCommand where
+  parseJSON = withText "ControlCommand" $ \text ->
+    case text of
+            "ev" -> return EvalStart
+            "out" -> return EvalOutput
+            "/ev" -> return EvalEnd
+            "du" -> return Duplicate
+            "pop" -> return PopEvaluatedValue
+            "~ret" -> return PopFunction
+            "->->" -> return PopTunnel
+            "str" -> return BeginString
+            "/str" -> return EndString
+            "nop" -> return NoOp
+            "choiceCnt" -> return ChoiceCount
+            "turn" -> return Turns
+            "turs" -> return TurnsSince
+            "readc" -> return ReadCount
+            "rnd" -> return Random
+            "srnd" -> return SeedRandom
+            "visit" -> return VisitIndex
+            "seq" -> return SequenceShuffleIndex
+            "thread" -> return StartThread
+            "done" -> return Done
+            "end" -> return End
+            "listInt" -> return ListFromInt
+            "range" -> return ListRange
+            "lrnd" -> return ListRandom
+            _     -> fail "string is not one of known enum values"
+
+
+---
+---   Native Functions
+---
+
+data NativeFunction = Add
+                    | Subtract
+                    | Divide
+                    | Multiply
+                    | Mod
+                    | Negate
+                    | Equal
+                    | Greater
+                    | Less
+                    | GreaterThanOrEquals
+                    | LessThanOrEquals
+                    | NotEquals
+                    | Not
+                    | And
+                    | Or
+                    | Min
+                    | Max
+                    | Pow
+                    | Floor
+                    | Ceiling
+                    | Int
+                    | Float
+                    | Has
+                    | Hasnt
+                    | Intersect
+                    | ListMin
+                    | ListMax
+                    | All
+                    | Count
+                    | ValueOfList
+                    | Invert
+  deriving (Generic, Show)
+
+instance FromJSON NativeFunction where
+  parseJSON = withText "NativeFunction" $ \text ->
+    case text of
+        "+" -> return Add
+        "-" -> return Subtract
+        "/" -> return Divide
+        "*" -> return Multiply
+        "%" -> return Mod
+        "_" -> return Negate
+        "==" -> return Equal
+        ">" -> return Greater
+        "<" -> return Less
+        ">=" -> return GreaterThanOrEquals
+        "<=" -> return LessThanOrEquals
+        "!=" -> return NotEquals
+        "!" -> return Not
+        "&&" -> return And
+        "||" -> return Or
+        "MIN" -> return Min
+        "MAX" -> return Max
+        "POW" -> return Pow
+        "FLOOR" -> return Floor
+        "CEILING" -> return Ceiling
+        "INT" -> return Int
+        "FLOAT" -> return Float
+        "?" -> return Has
+        "!?" -> return Hasnt
+        "^" -> return Intersect
+        "LIST_MIN" -> return ListMin
+        "LIST_MAX" -> return ListMax
+        "LIST_ALL" -> return All
+        "LIST_COUNT" -> return Count
+        "LIST_VALUE" -> return ValueOfList
+        "LIST_INVERT" -> return Invert
+        unknown     -> typeMismatch "Failed to parse as a function call" unknown
