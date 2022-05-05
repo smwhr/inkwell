@@ -139,9 +139,9 @@ parseArray = withArray "Container" f
         f t =
             let start = V.init t
                 meta = V.last t
-                container = Container
-            in  (fmap (container . toList) . traverse parseJSON) start
-
+            in do
+                container <- parseChild meta
+                (fmap (container . toList) . traverse parseJSON) start
 
 
 parseNull Null = return None
@@ -161,9 +161,9 @@ instance FromJSON Instruction where
 continueStory :: IO ()
 continueStory = do
     putStrLn "inkwell 0.0"
-    -- let storyJson = "{ \"inkVersion\": 20, \"root\":[\"ev\", 2,\"\\n\", \"^miaou\",\"+\",\"/ev\", [2,2,\"-\", null], null], \"listDefs\": {} }"
-    let storyJson = "{ \"inkVersion\": 20, \"root\":[\"^Hello world\", {\"#n\": \"hello\"}, {}], \"listDefs\": {} }"
-    -- let storyJson = "{ \"inkVersion\": 20, \"root\":[\"^Hello world\", 2], \"listDefs\": {} }"
+    -- let storyJson = "{ \"inkVersion\": 20, \"root\":[\"ev\", 2,\"\\n\", \"^miaou\",\"+\",\"/ev\", [2,2,\"-\", {\"#n\": \"hello\"}], null], \"listDefs\": {} }"
+    let storyJson = "{ \"inkVersion\": 20, \"root\":[\"^Hello world\", null], \"listDefs\": {} }"
+
     let maybeStory = eitherDecode storyJson :: Either String RootContainer
 
 
