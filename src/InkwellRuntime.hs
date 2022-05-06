@@ -140,7 +140,7 @@ parseArray = withArray "Container" f
             let start = V.init t
                 meta = V.last t
             in do
-                container <- parseChild meta
+                container <- parseChild meta <|> pure Container
                 (fmap (container . toList) . traverse parseJSON) start
 
 
@@ -162,7 +162,7 @@ continueStory :: IO ()
 continueStory = do
     putStrLn "inkwell 0.0"
     -- let storyJson = "{ \"inkVersion\": 20, \"root\":[\"ev\", 2,\"\\n\", \"^miaou\",\"+\",\"/ev\", [2,2,\"-\", {\"#n\": \"hello\"}], null], \"listDefs\": {} }"
-    let storyJson = "{ \"inkVersion\": 20, \"root\":[\"^Hello world\", null], \"listDefs\": {} }"
+    let storyJson = "{ \"inkVersion\": 20, \"root\":[\"^Hello world\",[1,2,null], [{\"#n\": \"hello\"}], {\"#n\": \"world\", \"myknot\" : [null]}], \"listDefs\": {} }"
 
     let maybeStory = eitherDecode storyJson :: Either String RootContainer
 
